@@ -1,34 +1,27 @@
-var orm = require("../config/orm");
+// require in the orm file that will talk to the database
+var orm = require("../config/orm.js");
 
-
-var newBurger 
-var devoured 
-
-
+// create the burger variable that will be exported back to the controller
 var burger = {
+  // selectAll for getting all the burgers
+  all: function(cb) {
+    orm.all('burgers', function(res) {
+      cb(res);
+    });
+  },
+  //The variables cols and vals are arrays.
+  create: function(cols, vals, cb) {
+    orm.create('burgers', cols, vals, function(res) {
+      cb(res);
+    });
+  },
+  // updateOne for changing the burger status
+  update: function(objColVals, condition, cb) {
+    orm.update('burgers', objColVals, condition, function(res) {
+      cb(res);
+    });
+  }
+};
 
-    selectAll: function(cb) {
-        orm.select("*", function (data) {
-           cb(data)
-        });
-    },
-
-    insertOne: function(name, cb){
-        orm.insert(newBurger, function(data) {
-            console.log("orm grabbed by id and inserted")
-            cb(data)
-        });
-    },
-
-    updateOne: function(name, cb) {
-        orm.update(devoured, function(data) {
-            console.log("orm grabbed by id and updated")
-            cb(data)
-        });
-    }
-
-}
-
-module.exports = burger
-
-
+//Export the database functions for the controller (burgers_controller.js).
+module.exports = burger;

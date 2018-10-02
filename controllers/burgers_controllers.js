@@ -1,36 +1,34 @@
-var express = require("express");
-var burgerCode = require("../models/burger.js");
+
+var express = require('express');
 var router = express.Router();
+var burger = require('../models/burger.js');
 
 
 router.get('/', function(req, res) {
-    burgerCode.selectAll(function(data) {
-        var hbsOject = {
-            burgers: data
-        };
-        res.render('index', hbsOject);
-    });
+  burger.all(function(data) {
+    var hbsObject = {
+      burgers: data
+    };
+    console.log(hbsObject);
+    res.render('index', hbsObject);
+  });
 });
 
-router.post('/burgers', function(req, res) {
-    burgerCode.insertOne([
-      'burger_name'
-    ], [
-      req.body.burger_name
-    ], function(data) {
-      res.redirect('/');
-    });
+router.post('/burgers/create', function(req, res) {
+  burger.create(['burger_name', 'devoured'], [req.body.name, false], function() {
+    res.redirect('/');
   });
-  
-  router.put('/burgers/:id', function(req, res) {
-    var condition = 'id = ' + req.params.id;
-  
-    burgerCode.updateOne({
-      devoured: true
-    }, condition, function(data) {
-      res.redirect('/');
-    });
+});
+
+
+router.put('/burgers/update/:id', function(req, res) {
+  var condition = 'id = ' + req.params.id;
+  console.log('condition', condition);
+
+  burger.update({devoured: req.body.devoured}, condition, function() {
+    res.redirect('/');
   });
-  
-  // Export routes for server.js to use.
-  module.exports = router;
+});
+
+
+module.exports = router;
